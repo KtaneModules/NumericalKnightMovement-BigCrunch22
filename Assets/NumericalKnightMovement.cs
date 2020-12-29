@@ -40,7 +40,7 @@ public class NumericalKnightMovement : MonoBehaviour
 	List<int> Movement = new List<int>();
 	List<string> Coordinates = new List<string>();
 	List<string> Count = new List<string>();
-	string[] CoordinatesCodename = {"A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4", "D1", "D2", "D3", "D4"};
+	string[] CoordinatesCodename = {"A1", "B1", "C1", "D1", "A2", "B2", "C2", "D2", "A3", "B3", "C3", "D3", "A4", "B4", "C4", "D4"};
 	
 	//Logging
     static int moduleIdCounter = 1;
