@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using KModkit;
-using Newtonsoft.Json;
 
 public class NumericalKnightMovement : MonoBehaviour
 {
@@ -60,7 +58,6 @@ public class NumericalKnightMovement : MonoBehaviour
 			};
 		}
 	}
-	
 	
 	void Start()
 	{
@@ -193,17 +190,21 @@ public class NumericalKnightMovement : MonoBehaviour
     private readonly string TwitchHelpMessage = @"To press a certain coordinate on the module, use the command !{0} [A-D][1-4] (You can perform this action in a chain. Example: !{0} A1 B3 C4) | To reset the grid, use the command !{0} reset";
     #pragma warning restore 414
 	
-	
     IEnumerator ProcessTwitchCommand(string command)
     {
 		string[] parameters = command.Split(' ');
 		if (Regex.IsMatch(command, @"^\s*reset\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
 		{
 			yield return null;
+			if (Table == -1)
+			{
+				yield return "sendtochaterror The board cannot be reset as the knight is not standing on a tile. The command was not continued.";
+				yield break;
+			}
 			for (int x = 0; x < 2; x++)
 			{
 				Tiles[Table].OnInteract();
-				yield return new WaitForSeconds (0.1f);
+				yield return new WaitForSecondsRealtime(0.1f);
 			}
 		}
 		
@@ -227,6 +228,23 @@ public class NumericalKnightMovement : MonoBehaviour
 				Tiles[Array.IndexOf(CoordinatesCodename, parameters[x].ToUpper())].OnInteract();
 				yield return new WaitForSecondsRealtime(0.1f);
 			}
+		}
+	}
+
+	IEnumerator TwitchHandleForcedSolve()
+    {
+		if (Table != -1)
+        {
+			for (int x = 0; x < 2; x++)
+			{
+				Tiles[Table].OnInteract();
+				yield return new WaitForSecondsRealtime(0.1f);
+			}
+		}
+		for (int x = 0; x < Movement.Count; x++)
+		{
+			Tiles[Movement[x]].OnInteract();
+			yield return new WaitForSecondsRealtime(0.1f);
 		}
 	}
 }
